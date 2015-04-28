@@ -9,41 +9,36 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/questionTitle"/>
+        android:id="@+id/TitleQ"/>
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/questionRadioGroup"
+        android:id="@+id/choices"
         android:orientation="vertical">
 
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="1"
-            android:id="@+id/firstRadio"
+            android:id="@+id/Radio1"
             android:clickable="true"
             android:onClick="onRadioClick" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="2"
-            android:id="@+id/secondRadio"
+            android:id="@+id/Radio2"
             android:clickable="true"
             android:onClick="onRadioClick" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="3"
-            android:id="@+id/thirdRadio"
+            android:id="@+id/Radio3"
             android:clickable="true"
             android:onClick="onRadioClick" />
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:tag="4"
-            android:id="@+id/fourthRadio"
-            android:checked="false"
+            android:id="@+id/Radio4"
             android:clickable="true"
             android:onClick="onRadioClick" />
     </RadioGroup>
@@ -51,7 +46,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/questionSubmitButton"
+        android:id="@+id/SubmitButton"
+        android:visibility="invisible"
         android:text="Submit"
         android:onClick="onSubmitClick" />
 

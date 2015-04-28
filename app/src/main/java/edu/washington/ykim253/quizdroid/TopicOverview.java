@@ -14,7 +14,7 @@ import android.widget.TextView;
 public class TopicOverview extends ActionBarActivity {
 
     private String topic;
-    private int numQuestions;
+    private int QuestionNumber;
 
 
     @Override
@@ -22,27 +22,37 @@ public class TopicOverview extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.topic_overview);
 
+        topic = getIntent().getStringExtra("topic");
 
         TextView Overview = (TextView) findViewById(R.id.Overview);
         TextView NumQuestion = (TextView) findViewById(R.id.NumQuestion);
-        Button Start = (Button) findViewById(R.id.Start);
+        TextView description = (TextView) findViewById(R.id.Desc);
+        Button Begin = (Button) findViewById(R.id.Begin);
 
-        topic = getIntent().getStringExtra("topic");
+        Overview.setText(topic + "Overview");
+        String trim = topic.split(" ")[0];
 
-        Overview.setText(topic);
+        int descID = getResources().getIdentifier(trim + "_Overview", "string", getPackageName());
+        String desc = getResources().getString(descID);
+        description.setText(desc);
 
-        NumQuestion.setText("There are 3 questions in this topic");
+        int numQuestionsId = getResources().getIdentifier(trim + "_Num", "integer", getPackageName());
+        QuestionNumber = getResources().getInteger(numQuestionsId);
+        NumQuestion.setText("There are " + QuestionNumber + " questions in this topic");
+
     }
 
     public void onBeginClick(View view) {
-        Intent QuizQuestions = new Intent(this, QuizQuestion.class);
+        Intent onToTheNextOne = new Intent(this, QuizQuestion.class);
 
-        QuizQuestions.putExtra("topic", topic);
-        QuizQuestions.putExtra("questions", 1);
-        QuizQuestions.putExtra("correct", 0);
+        onToTheNextOne.putExtra("topic", topic);
+        onToTheNextOne.putExtra("QuestionNumber", QuestionNumber);
+        onToTheNextOne.putExtra("questions", 1);
+        onToTheNextOne.putExtra("correct", 0);
 
-        startActivity(QuizQuestions);
+        startActivity(onToTheNextOne);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
