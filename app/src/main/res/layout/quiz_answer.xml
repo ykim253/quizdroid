@@ -9,22 +9,22 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/answerOriginalAnswer"/>
+        android:id="@+id/OGAnswer"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/answerCorrectAnswer"/>
+        android:id="@+id/CorrectAnswer"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/answerNumberCorrect"/>
+        android:id="@+id/howMany"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/answerNextButton"
+        android:id="@+id/NextButton"
         android:text="Next"
         android:clickable="true"
         android:onClick="onNextClick" />
