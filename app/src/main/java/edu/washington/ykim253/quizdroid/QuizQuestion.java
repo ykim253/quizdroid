@@ -108,6 +108,8 @@ public class QuizQuestion extends ActionBarActivity {
             QuizAnswer.putExtra("questionNumber", currentQuestionNumber);
             QuizAnswer.putExtra("numberCorrect", numberOfCorrect);
             QuizAnswer.putExtra("answerNumber", radioButtonClicked);
+
+            startActivity(QuizAnswer);
         }
     }
 
