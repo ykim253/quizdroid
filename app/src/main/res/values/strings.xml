@@ -56,7 +56,7 @@
 
     <string name="Marvel_Q2">Asgard is whose world?</string>
     <integer name="Marvel_Q2A">1</integer>
-    <string name="Marvel_Q2C1">Asgard</string>
+    <string name="Marvel_Q2C1">Thor</string>
     <string name="Marvel_Q2C2">Earth-616</string>
     <string name="Marvel_Q2C3">Earth-211</string>
     <string name="Marvel_Q2C4">Gohzer</string>

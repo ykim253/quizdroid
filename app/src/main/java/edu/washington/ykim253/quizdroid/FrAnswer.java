@@ -18,7 +18,7 @@ public class FrAnswer extends Fragment {
     private int QuestionNumber;
     private int questions;
     private int correct;
-    private int correctOne;
+    private String correctOne;
     private String chosenOne;
 
     @Override
@@ -29,7 +29,7 @@ public class FrAnswer extends Fragment {
             QuestionNumber = getArguments().getInt("QuestionNumber");
             questions = getArguments().getInt("questions");
             correct = getArguments().getInt("correct");
-            correctOne = getArguments().getInt("correctOne");
+            correctOne = getArguments().getString("correctOne");
             chosenOne = getArguments().getString("chosenOne");
         } else {
             throw new IllegalArgumentException("Bundle passed incorrectly to FragmentAnswer");
@@ -43,13 +43,7 @@ public class FrAnswer extends Fragment {
 
         View v = inflater.inflate(R.layout.quiz_answer, container, false);
 
-
-        int correctAnswerID = getResources().getIdentifier(topic.split(" ")[0] + "_Q" + questions + "C" +
-                correctOne, "string", getActivity().getPackageName());
-
-        String correctTxt = getResources().getString(correctAnswerID);
-
-        String correctAnswer = "Correct Answer: " + correctTxt;
+        String correctAnswer = "Correct Answer: " + correctOne;
         String originalAnswer = "Selected Answer: " + chosenOne;
 
         TextView OGAnswer = (TextView) v.findViewById(R.id.OGAnswer);
@@ -82,7 +76,7 @@ public class FrAnswer extends Fragment {
                     backToIt.putInt("questions", questions + 1);
                     backToIt.putInt("correct", correct);
                     if (hostActivity instanceof SecondActivity) {
-                        ((SecondActivity) hostActivity).questionTime(getArguments());
+                        ((SecondActivity) hostActivity).questionTime(backToIt);
                     }
                 }
                 else {
@@ -93,6 +87,16 @@ public class FrAnswer extends Fragment {
         });
 
         return v;
+    }
+
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.hostActivity = activity;
+    }
+
+    public void onDetach() {
+        super.onDetach();
+
     }
 
 }
