@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/NextButton"
         android:text="Next"
-        android:clickable="true"
-        android:onClick="onNextClick" />
+        android:clickable="true"/>
 
 </LinearLayout>

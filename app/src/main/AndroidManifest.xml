@@ -17,12 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".TopicOverview" />
-
-        <activity android:name=".QuizQuestion" />
-
-        <activity android:name=".QuizAnswer" />
-
+        <activity android:name=".SecondActivity" />
 
     </application>
 

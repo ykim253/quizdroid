@@ -29,7 +29,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
                 String value = String.valueOf(parent.getItemAtPosition(i));
-                Intent chosenOne = new Intent(MainActivity.this, TopicOverview.class);
+                Intent chosenOne = new Intent(MainActivity.this, SecondActivity.class);
                 chosenOne.putExtra("topic", value);
                 startActivity(chosenOne);
             }

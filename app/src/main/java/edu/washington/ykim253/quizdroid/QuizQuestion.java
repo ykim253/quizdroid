@@ -43,6 +43,7 @@ public class QuizQuestion extends ActionBarActivity {
             TextView radioChoice = (TextView) findViewById(RadioId);
             radioChoice.setText(choice);
         }
+
     }
 
     public void onRadioClick(View view) {

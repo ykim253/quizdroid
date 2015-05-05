@@ -21,26 +21,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Radio1"
-            android:clickable="true"
-            android:onClick="onRadioClick" />
+            android:clickable="true"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Radio2"
-            android:clickable="true"
-            android:onClick="onRadioClick" />
+            android:clickable="true"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Radio3"
-            android:clickable="true"
-            android:onClick="onRadioClick" />
+            android:clickable="true"/>
         <RadioButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/Radio4"
-            android:clickable="true"
-            android:onClick="onRadioClick" />
+            android:clickable="true" />
     </RadioGroup>
 
     <Button
@@ -48,7 +44,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/SubmitButton"
         android:visibility="invisible"
-        android:text="Submit"
-        android:onClick="onSubmitClick" />
+        android:text="Submit"/>
 
 </LinearLayout>
