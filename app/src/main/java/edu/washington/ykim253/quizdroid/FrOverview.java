@@ -41,7 +41,7 @@ public class FrOverview extends Fragment{
         TextView description = (TextView) overviewView.findViewById(R.id.Desc);
         Button Begin = (Button) overviewView.findViewById(R.id.Begin);
 
-        Overview.setText(topic + "Overview");
+        Overview.setText(topic + " Overview");
 
         if(topic.equals("Math")) {
             String desc = getString(R.string.Math_Overview);
