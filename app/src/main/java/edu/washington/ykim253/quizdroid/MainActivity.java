@@ -9,10 +9,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
 
-    public String[] Subjects = {"Math", "Physics", "Marvel Super Heroes"};
+public class MainActivity extends ActionBarActivity{
 
     private ListView Topics;
 
@@ -21,8 +22,18 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        QuizApp quizApp = (QuizApp) getApplication();
+        List<Topic> subjects = quizApp.getTopics();
+        ArrayList<String> newSubject = new ArrayList<String>();
+
+        //get each topic
+        for(int i =0; i < subjects.size(); i++) {
+            newSubject.add(subjects.get(i).getTitle() + " - " + subjects.get(i).getShort());
+        }
+
         Topics = (ListView) findViewById(R.id.Topics);
-        ArrayAdapter<String> items = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Subjects);
+        //added custom adapter for the icon/images to show for the listview
+        MyCustomAdapter<String> items = new MyCustomAdapter<>(this, newSubject);
         Topics.setAdapter(items);
 
         Topics.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -30,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
                 String value = String.valueOf(parent.getItemAtPosition(i));
                 Intent chosenOne = new Intent(MainActivity.this, SecondActivity.class);
-                chosenOne.putExtra("topic", value);
+                chosenOne.putExtra("topic", i);
                 startActivity(chosenOne);
             }
         });

@@ -12,17 +12,18 @@ import android.widget.TextView;
 
 public class FrOverview extends Fragment{
 
+    private Activity hostActivity;
+    private Topic choseOne;
     private String topic;
     private int QuestionNumber;
-    private Activity hostActivity;
-
-
 
     public FrOverview() {
-        // Required empty public constructor
+
+    }
+    public FrOverview(Topic chosenOne) {
+        this.choseOne = chosenOne;// Required empty public constructor
     }
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -30,6 +31,7 @@ public class FrOverview extends Fragment{
             QuestionNumber = getArguments().getInt("QuestionNumber");
         }
     }
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,30 +43,18 @@ public class FrOverview extends Fragment{
         TextView description = (TextView) overviewView.findViewById(R.id.Desc);
         Button Begin = (Button) overviewView.findViewById(R.id.Begin);
 
-        Overview.setText(topic + " Overview");
+        Overview.setText(choseOne.getTitle() + " Overview");
+        description.setText(choseOne.getLong());
 
-        if(topic.equals("Math")) {
-            String desc = getString(R.string.Math_Overview);
-            description.setText(desc);
-        } else if (topic.equals("Physics")) {
-            String desc = getString(R.string.Physics_Overview);
-            description.setText(desc);
-        } else {
-            String desc = getString(R.string.Marvel_Overview);
-            description.setText(desc);
-        }
-
-
-        NumQuestion.setText("There are " + QuestionNumber + " questions in this topic");
+        NumQuestion.setText("There are " + choseOne.getQuestions().size() + " questions in this topic");
 
         Begin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Bundle onToTheNextOne = new Bundle();
-
-                onToTheNextOne.putString("topic", topic);
                 onToTheNextOne.putInt("QuestionNumber", QuestionNumber);
-                onToTheNextOne.putInt("questions", 1);
+                onToTheNextOne.putString("topic", topic);
+                onToTheNextOne.putInt("questions", 0);
                 onToTheNextOne.putInt("correct", 0);
                 if (hostActivity instanceof SecondActivity) {
                     ((SecondActivity) hostActivity).questionTime(onToTheNextOne);

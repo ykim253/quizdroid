@@ -8,15 +8,17 @@ import android.os.Bundle;
 
 public class SecondActivity extends ActionBarActivity {
     private String topic;
+    private Topic topics;
     private int QuestionNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.secondactivity);
-        topic = getIntent().getStringExtra("topic");
-        int numQuestionsId = getResources().getIdentifier(topic.split(" ")[0] + "_Num", "integer", getPackageName());
-        QuestionNumber = getResources().getInteger(numQuestionsId);
+        int i = getIntent().getIntExtra("topic", -1);
+        topics = QuizApp.getInstance().getTopics().get(i);
+        topic = topics.getTitle();
+        QuestionNumber = topics.getQuestions().size();
         overviewTime();
     }
 
@@ -27,7 +29,7 @@ public class SecondActivity extends ActionBarActivity {
         Bundle topicBundle = new Bundle();
         topicBundle.putString("topic", topic);
         topicBundle.putInt("QuestionNumber", QuestionNumber);
-        FrOverview overview = new FrOverview();
+        FrOverview overview = new FrOverview(topics);
         overview.setArguments(topicBundle);
 
         ft.replace(R.id.secondmain, overview);
@@ -38,7 +40,7 @@ public class SecondActivity extends ActionBarActivity {
         FragmentManager fm = getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
 
-        FrQuestion question = new FrQuestion();
+        FrQuestion question = new FrQuestion(topics);
         question.setArguments(bundle);
 
         ft.replace(R.id.secondmain, question);

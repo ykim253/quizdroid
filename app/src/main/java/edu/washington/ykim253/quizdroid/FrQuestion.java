@@ -24,10 +24,17 @@ public class FrQuestion extends Fragment {
     Button submit;
     private String chosenAnswer;
     private String correctAnswer;
+    private Topic topics;
+    private Question listQ;
 
     View v;
 
     public FrQuestion() {
+
+    }
+
+    public FrQuestion(Topic topics) {
+        this.topics = topics;
 
     }
 
@@ -39,6 +46,7 @@ public class FrQuestion extends Fragment {
             QuestionNumber = getArguments().getInt("QuestionNumber");
             questions = getArguments().getInt("questions");
             correct = getArguments().getInt("correct");
+            listQ = topics.getQuestions().get(questions);
         }
 
     }
@@ -50,22 +58,13 @@ public class FrQuestion extends Fragment {
         choices = (RadioGroup) v.findViewById(R.id.choices);
 
         //questions get set up
-        int QuestionNum = getResources().getIdentifier(topic.split(" ")[0] + "_Q" + questions, "string", getActivity().getPackageName());
-        String question = getResources().getString(QuestionNum);
         TextView QuestionTitle = (TextView) v.findViewById(R.id.TitleQ);
-        QuestionTitle.setText(question);
+        QuestionTitle.setText(listQ.getQuestionText());
         submit = (Button) v.findViewById(R.id.SubmitButton);
-
-        for (int i=1; i <= 4; i++) {
-            int choices = getResources().getIdentifier(topic.split(" ")[0] + "_Q" + questions + "C" + i, "string" , getActivity().getPackageName());
-            String choice =  getResources().getString(choices);
-            int RadioId = getResources().getIdentifier("Radio" + i, "id", getActivity().getPackageName());
-            TextView radioChoice = (TextView) v.findViewById(RadioId);
-            radioChoice.setText(choice);
-        }
 
         //listen to radio click to enable submit
         RadioButton tester = (RadioButton) v.findViewById(R.id.Radio1);
+        tester.setText(listQ.getChoice1());
         tester.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,48 +72,18 @@ public class FrQuestion extends Fragment {
                 ((RadioButton)v).setChecked(true);
                 submit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        if(topic.equals("Math")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Math_Q1C1);
-                                correctAnswer = getString(R.string.Math_Q1C1);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Math_Q2C1);
-                                correctAnswer = getString(R.string.Math_Q2C4);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Math_Q3C1);
-                                correctAnswer = getString(R.string.Math_Q3C3);
-                            }
-                        } else if (topic.equals("Physics")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Physics_Q1C1);
-                                correctAnswer = getString(R.string.Physics_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Physics_Q2C1);
-                                correctAnswer = getString(R.string.Physics_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Physics_Q3C1);
-                                correctAnswer = getString(R.string.Physics_Q3C3);
-                            }
-                        } else {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Marvel_Q1C1);
-                                correctAnswer = getString(R.string.Marvel_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Marvel_Q2C1);
-                                correctAnswer = getString(R.string.Marvel_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Marvel_Q3C1);
-                                correctAnswer = getString(R.string.Marvel_Q3C4);
-                            }
-                        }
-                        Bundle onToTheNext = new Bundle();
 
+                        Bundle onToTheNext = new Bundle();
+                        chosenAnswer = listQ.getChoice1();
+                        if (listQ.getAnswer() == 1) {
+                            correctAnswer = listQ.getChoice1();
+                        } else if (listQ.getAnswer() == 2) {
+                            correctAnswer = listQ.getChoice2();
+                        } else if (listQ.getAnswer() == 3) {
+                            correctAnswer = listQ.getChoice3();
+                        } else {
+                            correctAnswer = listQ.getChoice4();
+                        }
                         onToTheNext.putString("topic", topic);
                         onToTheNext.putString("chosenOne", chosenAnswer);
                         onToTheNext.putString("correctOne", correctAnswer);
@@ -135,6 +104,7 @@ public class FrQuestion extends Fragment {
         });
 
         RadioButton tester2 = (RadioButton) v.findViewById(R.id.Radio2);
+        tester2.setText(listQ.getChoice2());
         tester2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,48 +112,18 @@ public class FrQuestion extends Fragment {
                 ((RadioButton)v).setChecked(true);
                 submit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        if(topic.equals("Math")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Math_Q1C2);
-                                correctAnswer = getString(R.string.Math_Q1C1);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Math_Q2C2);
-                                correctAnswer = getString(R.string.Math_Q2C4);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Math_Q3C2);
-                                correctAnswer = getString(R.string.Math_Q3C3);
-                            }
-                        } else if (topic.equals("Physics")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Physics_Q1C2);
-                                correctAnswer = getString(R.string.Physics_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Physics_Q2C2);
-                                correctAnswer = getString(R.string.Physics_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Physics_Q3C2);
-                                correctAnswer = getString(R.string.Physics_Q3C3);
-                            }
-                        } else {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Marvel_Q1C2);
-                                correctAnswer = getString(R.string.Marvel_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Marvel_Q2C2);
-                                correctAnswer = getString(R.string.Marvel_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Marvel_Q3C2);
-                                correctAnswer = getString(R.string.Marvel_Q3C4);
-                            }
-                        }
-                        Bundle onToTheNext = new Bundle();
 
+                        Bundle onToTheNext = new Bundle();
+                        chosenAnswer = listQ.getChoice2();
+                        if (listQ.getAnswer() == 1) {
+                            correctAnswer = listQ.getChoice1();
+                        } else if (listQ.getAnswer() == 2) {
+                            correctAnswer = listQ.getChoice2();
+                        } else if (listQ.getAnswer() == 3) {
+                            correctAnswer = listQ.getChoice3();
+                        } else {
+                            correctAnswer = listQ.getChoice4();
+                        }
                         onToTheNext.putString("topic", topic);
                         onToTheNext.putString("chosenOne", chosenAnswer);
                         onToTheNext.putString("correctOne", correctAnswer);
@@ -204,6 +144,7 @@ public class FrQuestion extends Fragment {
         });
 
         RadioButton tester3 = (RadioButton) v.findViewById(R.id.Radio3);
+        tester3.setText(listQ.getChoice3());
         tester3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,48 +152,18 @@ public class FrQuestion extends Fragment {
                 ((RadioButton)v).setChecked(true);
                 submit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        if(topic.equals("Math")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Math_Q1C3);
-                                correctAnswer = getString(R.string.Math_Q1C1);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Math_Q2C3);
-                                correctAnswer = getString(R.string.Math_Q2C4);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Math_Q3C3);
-                                correctAnswer = getString(R.string.Math_Q3C3);
-                            }
-                        } else if (topic.equals("Physics")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Physics_Q1C3);
-                                correctAnswer = getString(R.string.Physics_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Physics_Q2C3);
-                                correctAnswer = getString(R.string.Physics_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Physics_Q3C3);
-                                correctAnswer = getString(R.string.Physics_Q3C3);
-                            }
-                        } else {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Marvel_Q1C3);
-                                correctAnswer = getString(R.string.Marvel_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Marvel_Q2C3);
-                                correctAnswer = getString(R.string.Marvel_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Marvel_Q3C3);
-                                correctAnswer = getString(R.string.Marvel_Q3C4);
-                            }
-                        }
-                        Bundle onToTheNext = new Bundle();
 
+                        Bundle onToTheNext = new Bundle();
+                        chosenAnswer = listQ.getChoice3();
+                        if (listQ.getAnswer() == 1) {
+                            correctAnswer = listQ.getChoice1();
+                        } else if (listQ.getAnswer() == 2) {
+                            correctAnswer = listQ.getChoice2();
+                        } else if (listQ.getAnswer() == 3) {
+                            correctAnswer = listQ.getChoice3();
+                        } else {
+                            correctAnswer = listQ.getChoice4();
+                        }
                         onToTheNext.putString("topic", topic);
                         onToTheNext.putString("chosenOne", chosenAnswer);
                         onToTheNext.putString("correctOne", correctAnswer);
@@ -273,6 +184,7 @@ public class FrQuestion extends Fragment {
         });
 
         RadioButton tester4 = (RadioButton) v.findViewById(R.id.Radio4);
+        tester4.setText(listQ.getChoice4());
         tester4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -280,48 +192,18 @@ public class FrQuestion extends Fragment {
                 ((RadioButton)v).setChecked(true);
                 submit.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        if(topic.equals("Math")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Math_Q1C4);
-                                correctAnswer = getString(R.string.Math_Q1C1);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Math_Q2C4);
-                                correctAnswer = getString(R.string.Math_Q2C4);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Math_Q3C4);
-                                correctAnswer = getString(R.string.Math_Q3C3);
-                            }
-                        } else if (topic.equals("Physics")) {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Physics_Q1C4);
-                                correctAnswer = getString(R.string.Physics_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Physics_Q2C4);
-                                correctAnswer = getString(R.string.Physics_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Physics_Q3C4);
-                                correctAnswer = getString(R.string.Physics_Q3C3);
-                            }
-                        } else {
-                            if (questions == 1) {
-                                chosenAnswer = getString(R.string.Marvel_Q1C4);
-                                correctAnswer = getString(R.string.Marvel_Q1C2);
-                            }
-                            if (questions == 2) {
-                                chosenAnswer = getString(R.string.Marvel_Q2C4);
-                                correctAnswer = getString(R.string.Marvel_Q2C1);
-                            }
-                            if (questions == 3) {
-                                chosenAnswer = getString(R.string.Marvel_Q3C4);
-                                correctAnswer = getString(R.string.Marvel_Q3C4);
-                            }
-                        }
-                        Bundle onToTheNext = new Bundle();
 
+                        Bundle onToTheNext = new Bundle();
+                        chosenAnswer = listQ.getChoice4();
+                        if (listQ.getAnswer() == 1) {
+                            correctAnswer = listQ.getChoice1();
+                        } else if (listQ.getAnswer() == 2) {
+                            correctAnswer = listQ.getChoice2();
+                        } else if (listQ.getAnswer() == 3) {
+                            correctAnswer = listQ.getChoice3();
+                        } else {
+                            correctAnswer = listQ.getChoice4();
+                        }
                         onToTheNext.putString("topic", topic);
                         onToTheNext.putString("chosenOne", chosenAnswer);
                         onToTheNext.putString("correctOne", correctAnswer);
@@ -340,167 +222,12 @@ public class FrQuestion extends Fragment {
                 });
             }
         });
-
-        //
-        // for later for me to figure out more. hardcoded stuff to make it work for now
-        // submit button listener
- /*       submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String trim = topic.split(" ")[0];
-
-                int chosenOne = choices.indexOfChild(v.findViewById(choices.getCheckedRadioButtonId()));
-                int chosenOneID = getResources().getIdentifier(topic.split(" ")[0] + "_Q" + questions + "C" +
-                        (chosenOne + 1), "string", getActivity().getPackageName());
-
-                if(topic.equals("Math")) {
-                    String desc = getString(R.string.Math_Overview);
-                    if (questions == 1) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Math_Q1C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Math_Q1C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Math_Q1C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Math_Q1C4);
-                        }
-                        correctAnswer = getString(R.string.Math_Q1C1);
-                    }
-                    if (questions == 2) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Math_Q2C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Math_Q2C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Math_Q2C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Math_Q2C4);
-                        }
-                        correctAnswer = getString(R.string.Math_Q2C4);
-                    }
-                    if (questions == 3) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Math_Q3C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Math_Q3C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Math_Q3C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Math_Q3C4);
-                        }
-                        correctAnswer = getString(R.string.Math_Q2C3);
-                    }
-                } else if (topic.equals("Physics")) {
-                    String desc = getString(R.string.Physics_Overview);
-                    if (questions == 1) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Physics_Q1C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Physics_Q1C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Physics_Q1C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Physics_Q1C4);
-                        }
-                        correctAnswer = getString(R.string.Physics_Q1C2);
-                    }
-                    if (questions == 2) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Physics_Q2C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Physics_Q2C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Physics_Q2C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Physics_Q2C4);
-                        }
-                        correctAnswer = getString(R.string.Physics_Q2C1);
-                    }
-                    if (questions == 3) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Physics_Q3C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Physics_Q3C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Physics_Q3C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Physics_Q3C4);
-                        }
-                        correctAnswer = getString(R.string.Physics_Q2C3);
-                    }
-                } else {
-                    String desc = getString(R.string.Marvel_Overview);
-                    if (questions == 1) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Marvel_Q1C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Marvel_Q1C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Marvel_Q1C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Marvel_Q1C4);
-                        }
-                        correctAnswer = getString(R.string.Marvel_Q1C2);
-                    }
-                    if (questions == 2) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Marvel_Q2C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Marvel_Q2C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Marvel_Q2C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Marvel_Q2C4);
-                        }
-                        correctAnswer = getString(R.string.Marvel_Q2C1);
-                    }
-                    if (questions == 3) {
-                        if(chosenOne == 0) {
-                            chosenAnswer = getString(R.string.Marvel_Q3C1);
-                        } else if (chosenOne == 1) {
-                            chosenAnswer = getString(R.string.Marvel_Q3C2);
-                        } else if (chosenOne == 2) {
-                            chosenAnswer = getString(R.string.Marvel_Q3C3);
-                        } else {
-                            chosenAnswer = getString(R.string.Marvel_Q3C4);
-                        }
-                        correctAnswer = getString(R.string.Marvel_Q2C4);
-                    }
-                }
-
-                int correctOneID = getResources().getIdentifier(trim + "_Q" +
-                        questions + "A", "integer", getActivity().getPackageName());
-                int correctOne = getResources().getInteger(correctOneID);
-                int correctAnswerID = getResources().getIdentifier(trim + "_Q" + questions + "C" +
-                        correctOne, "string", getActivity().getPackageName());
-
-                Bundle onToTheNext = new Bundle();
-
-                onToTheNext.putString("topic", topic);
-                onToTheNext.putString("chosenOne", chosenAnswer);
-                onToTheNext.putString("correctOne", correctAnswer);
-                onToTheNext.putInt("QuestionNumber", QuestionNumber);
-                onToTheNext.putInt("questions", questions);
-                if (chosenOne + 1 == correctOne) {
-                    onToTheNext.putInt("correct", correct + 1);
-                } else {
-                    onToTheNext.putInt("correct", correct);
-                }
-
-                if (hostActivity instanceof SecondActivity) {
-                    ((SecondActivity) hostActivity).answerTime(onToTheNext);
-                }
-            }
-        });
-*/
         return v;
     }
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
         this.hostActivity = activity;
     }
 

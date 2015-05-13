@@ -32,7 +32,7 @@ public class FrAnswer extends Fragment {
             correctOne = getArguments().getString("correctOne");
             chosenOne = getArguments().getString("chosenOne");
         } else {
-            throw new IllegalArgumentException("Bundle passed incorrectly to FragmentAnswer");
+            throw new IllegalArgumentException("Bundle passed incorrectly");
         }
     }
 
@@ -51,24 +51,23 @@ public class FrAnswer extends Fragment {
         TextView howMany = (TextView) v.findViewById(R.id.howMany);
         Button NextButton = (Button) v.findViewById(R.id.NextButton);
 
-        if(questions == QuestionNumber) {
+        //if there are no more questions, switch the button
+        if(questions == QuestionNumber - 1) {
             NextButton.setText("Finish");
         }
 
+        //set the user and correct answer for feedback
         CorrectAnswer.setText(correctAnswer);
         OGAnswer.setText(originalAnswer);
         howMany.setText("You have " + correct + " out of " + QuestionNumber + " possible.");
 
         Button next = (Button) v.findViewById(R.id.NextButton);
 
-
-
-
         // next button listener
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(questions < 3) {
+                if(questions < QuestionNumber - 1) {
                     Bundle backToIt = new Bundle();
 
                     backToIt.putString("topic", topic);
