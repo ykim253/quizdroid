@@ -2,6 +2,13 @@
     <string name="app_name">Quiz Droid</string>
     <string name="action_settings">Settings</string>
 
+    <string name="file">Question Location</string>
+    <string name="freq">Download Frequency</string>
+    <string name="file_sum">What is the URL for download?</string>
+    <string name="freq_sum">How often do you want to check? (in minutes)</string>
+    <string name="preferences">Preferences</string>
+    <string name="finish">Accept Changes</string>
+
     <string name="Math_Overview">Math is universal in all languages</string>
     <integer name="Math_Num">3</integer>
 
@@ -73,5 +80,6 @@
 
     <string name="Marvel_Overview">Marvel Universe is so big</string>
     <integer name="Marvel_Num">3</integer>
+
 
 </resources>

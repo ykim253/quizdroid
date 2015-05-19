@@ -1,7 +1,17 @@
 package edu.washington.ykim253.quizdroid;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,8 +22,12 @@ import java.util.List;
 
 public class QuizApp extends Application implements TopicRepository{
 
-    private static QuizApp instance; //made QuizApp singleton
+    private static QuizApp instance;
     public List<Topic> topic;
+    String url;
+    int interval;
+    private AlarmManager am;
+    private PendingIntent pi;
 
     public QuizApp()
     {
@@ -33,6 +47,28 @@ public class QuizApp extends Application implements TopicRepository{
     @Override public void onCreate(){
         super.onCreate();
         Log.i("QuizApp", "created");
+        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        url = sharedPrefs.getString("location",
+                "http://tednewardsandbox.site44.com/questions.json");
+        interval = Integer.parseInt(sharedPrefs.getString("minutes", "5"));
+        am = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                Intent downloadServiceIntent = new Intent(context, DownloadService.class);
+                downloadServiceIntent.putExtra("url", url);
+                context.startService(downloadServiceIntent);
+
+                Toast.makeText(QuizApp.this, url, Toast.LENGTH_SHORT).show();
+            }
+        };
+        registerReceiver(alarmReceiver, new IntentFilter("edu.washington.ykim253.checkJSON"));
+        Intent intent = new Intent();
+        intent.setAction("edu.washington.ykim253.checkJSON");
+        pi = PendingIntent.getBroadcast(this, 0, intent, 0);
+        startAlarm(interval, url);
 
         String json = null;
         try {
@@ -80,6 +116,16 @@ public class QuizApp extends Application implements TopicRepository{
 
         return new String(buffer, "UTF-8");
     }
+
+    public void startAlarm(int interval, String url) {
+        this.interval = interval * 60000; //converts milliseconds to minutes
+        this.url = url;
+
+        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), this.interval,
+                pi);
+    }
+
+
 
     @Override
     public List<Topic> getTopics() {

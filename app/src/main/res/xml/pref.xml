@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="@string/action_settings">
+        <EditTextPreference
+            android:title="@string/file"
+            android:summary="@string/file_sum"
+            android:key="location"
+            android:inputType="textUri"/>
+
+        <EditTextPreference
+            android:key="minutes"
+            android:title="@string/freq"
+            android:summary="@string/freq_sum"
+            android:inputType="number"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>
