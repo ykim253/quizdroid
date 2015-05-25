@@ -2,20 +2,14 @@ package edu.washington.ykim253.quizdroid;
 
 import android.app.AlarmManager;
 import android.app.Application;
+import android.app.DownloadManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +18,9 @@ public class QuizApp extends Application implements TopicRepository{
 
     private static QuizApp instance;
     public List<Topic> topic;
-    String url;
-    int interval;
-    private AlarmManager am;
-    private PendingIntent pi;
+    private String url;
+    private int interval;
+
 
     public QuizApp()
     {
@@ -47,63 +40,96 @@ public class QuizApp extends Application implements TopicRepository{
     @Override public void onCreate(){
         super.onCreate();
         Log.i("QuizApp", "created");
-        final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        url = sharedPrefs.getString("location",
-                "http://tednewardsandbox.site44.com/questions.json");
-        interval = Integer.parseInt(sharedPrefs.getString("minutes", "5"));
-        am = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        BroadcastReceiver alarmReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-
-                Intent downloadServiceIntent = new Intent(context, DownloadService.class);
-                downloadServiceIntent.putExtra("url", url);
-                context.startService(downloadServiceIntent);
-
-                Toast.makeText(QuizApp.this, url, Toast.LENGTH_SHORT).show();
-            }
-        };
-        registerReceiver(alarmReceiver, new IntentFilter("edu.washington.ykim253.checkJSON"));
-        Intent intent = new Intent();
-        intent.setAction("edu.washington.ykim253.checkJSON");
-        pi = PendingIntent.getBroadcast(this, 0, intent, 0);
-        startAlarm(interval, url);
-
+        File myFile = new File(getFilesDir().getAbsolutePath(), "/question.json");
         String json = null;
-        try {
-            InputStream inputStream = getAssets().open("questions.json");
-            json = readJSONFile(inputStream);
 
-            JSONArray jsonTopics = new JSONArray(json);
-            Log.i("QuizApp", "now loading topics");
-            for (int i=0; i<jsonTopics.length(); i++)
-            {
-                JSONObject topics = jsonTopics.getJSONObject(i);
+        if (myFile.exists()) {
+            Log.i("QuizApp", "question.json written successfully");
 
-                JSONArray qs = topics.getJSONArray("questions");
-                List<Question> questions = new ArrayList<Question>();
-                for (int j=0; j< qs.length(); j++)
-                {
-                    Log.d("QuizApp", "Adding Questions");
-                    JSONObject q = qs.getJSONObject(j);
-                    questions.add(new Question(q.getString("text"),
-                            q.getJSONArray("answers").getString(0),
-                            q.getJSONArray("answers").getString(1),
-                            q.getJSONArray("answers").getString(2),
-                            q.getJSONArray("answers").getString(3),
-                            q.getInt("answer")));
+            try {
+                FileInputStream fis = openFileInput("question.json");      // sweet we found it. openFileInput() takes a string path from your data directory. no need to put 'data/' in your path parameter
+                json = readJSONFile(fis);
+                try {
+                    JSONArray jsonTopics = new JSONArray(json);
+                    Log.i("QuizApp", "now loading topics");
+                    for (int i=0; i<jsonTopics.length(); i++)
+                    {
+                        JSONObject topics = jsonTopics.getJSONObject(i);
 
+                        JSONArray qs = topics.getJSONArray("questions");
+                        List<Question> questions = new ArrayList<Question>();
+                        for (int j=0; j< qs.length(); j++)
+                        {
+                            Log.d("QuizApp", "Adding Questions");
+                            JSONObject q = qs.getJSONObject(j);
+                            questions.add(new Question(q.getString("text"),
+                                    q.getJSONArray("answers").getString(0),
+                                    q.getJSONArray("answers").getString(1),
+                                    q.getJSONArray("answers").getString(2),
+                                    q.getJSONArray("answers").getString(3),
+                                    q.getInt("answer")));
+
+                        }
+                        String title = topics.getString("title");
+                        String desc = topics.getString("desc");
+                        topic.add(new Topic(title, desc, desc, questions));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                String title = topics.getString("title");
-                String desc = topics.getString("desc");
-                topic.add(new Topic(title, desc, desc, questions));
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+
+
+        } else {
+            // Can't find data.json file in files directory. Fetch data.json in assets
+            Log.i("QuizApp", "questions.json DOESN'T exist. Fetch from backup");
+
+            try {
+                InputStream inputStream = getAssets().open("data.json");
+                json = readJSONFile(inputStream);
+                try {
+                    JSONArray jsonTopics = new JSONArray(json);
+                    Log.i("QuizApp", "now loading topics");
+                    for (int i=0; i<jsonTopics.length(); i++)
+                    {
+                        JSONObject topics = jsonTopics.getJSONObject(i);
+
+                        JSONArray qs = topics.getJSONArray("questions");
+                        List<Question> questions = new ArrayList<Question>();
+                        for (int j=0; j< qs.length(); j++)
+                        {
+                            Log.d("QuizApp", "Adding Questions");
+                            JSONObject q = qs.getJSONObject(j);
+                            questions.add(new Question(q.getString("text"),
+                                    q.getJSONArray("answers").getString(0),
+                                    q.getJSONArray("answers").getString(1),
+                                    q.getJSONArray("answers").getString(2),
+                                    q.getJSONArray("answers").getString(3),
+                                    q.getInt("answer")));
+
+                        }
+                        String title = topics.getString("title");
+                        String desc = topics.getString("desc");
+                        topic.add(new Topic(title, desc, desc, questions));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
+
+
+
+        startAlarm(getApplicationContext(), interval, true);
     }
 
     // reads InputStream of JSON file and returns the file in JSON String format
@@ -117,15 +143,54 @@ public class QuizApp extends Application implements TopicRepository{
         return new String(buffer, "UTF-8");
     }
 
-    public void startAlarm(int interval, String url) {
-        this.interval = interval * 60000; //converts milliseconds to minutes
-        this.url = url;
+    public void writeToFile(String data) {
+        try {
+            Log.i("QuizApp", "writing downloaded to file");
 
-        am.setRepeating(AlarmManager.RTC, System.currentTimeMillis(), this.interval,
-                pi);
+            File file = new File(getFilesDir().getAbsolutePath(), "question.json");
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(data.getBytes());
+            fos.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
     }
 
+    public void startAlarm(Context context,int interval, boolean alarm) {
 
+        Intent alarmReceiverIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, alarmReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
+
+        if (alarm) {
+            int refreshInterval = interval * 60000;
+
+            Log.i("Alarm", "setting alarm to " + refreshInterval);
+
+            // Start the alarm manager to repeat
+            am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), refreshInterval, pi);
+        }
+        else {
+            am.cancel(pi);
+            pi.cancel();
+
+            Log.i("Alarm", "Stopping alarm");
+        }
+    }
+
+    public void setInterval (int interval) {
+        this.interval = interval;
+    }
+
+    public void setUrl(String loc) {
+        url = loc;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 
     @Override
     public List<Topic> getTopics() {

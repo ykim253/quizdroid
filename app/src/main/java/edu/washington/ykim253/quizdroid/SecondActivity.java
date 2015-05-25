@@ -74,8 +74,11 @@ public class SecondActivity extends ActionBarActivity {
             String url = sharedPrefs.getString("location",
                     "http://tednewardsandbox.site44.com/questions.json");
             int interval = Integer.parseInt(sharedPrefs.getString("minutes", "5"));
-            QuizApp.getInstance().startAlarm(interval, url);
+            QuizApp.getInstance().setInterval(interval);
+            QuizApp.getInstance().setUrl(url);
+            QuizApp.getInstance().startAlarm(SecondActivity.this, interval, true);
         }
+
 
     }
 
